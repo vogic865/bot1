@@ -8,11 +8,11 @@ nest_asyncio.apply()
 
 # === Настройки ===
 BOT_TOKEN = '7714387405:AAEaeoA0nwiHkj7uRKXI1jzoHbDW0BAYEQM'
-SOURCE_CHANNEL_ID = -1002392464060  # Можно указать как -100123456789
+SOURCE_CHANNEL_ID = -1002392464060  # ID исходного канала
 TARGET_CHAT_IDS = [
     -1002644440071,   # Канал 1
     -1002392464060,   # Канал 2
-    269504433
+    269504433         # Чат
 ]
 
 # === Обработчик новых сообщений в канале ===
@@ -20,18 +20,22 @@ async def forward_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("Получено сообщение:", update)
 
     if update.channel_post and update.channel_post.chat.id == SOURCE_CHANNEL_ID:
-        print("✅ Это нужный канал. Пытаюсь переслать сообщение...")
-        try:
-            await context.bot.forward_message(
-                chat_id=TARGET_CHANNEL_ID,
-                from_chat_id=update.channel_post.chat.id,
-                message_id=update.channel_post.message_id
-            )
-            print("✅ Сообщение успешно переслано!")
-        except Exception as e:
-            print(f"❌ Ошибка при пересылке: {e}")
+        print("✅ Это нужный канал. Пересылаю сообщение во все целевые чаты...")
+        message_id = update.channel_post.message_id
+        from_chat_id = update.channel_post.chat.id
+
+        for chat_id in TARGET_CHAT_IDS:
+            try:
+                await context.bot.forward_message(
+                    chat_id=chat_id,
+                    from_chat_id=from_chat_id,
+                    message_id=message_id
+                )
+                print(f"✅ Сообщение переслано в {chat_id}")
+            except Exception as e:
+                print(f"❌ Не удалось переслать в {chat_id}: {e}")
     else:
-        print("⚠️ Сообщение не из нужного канала")
+        print("⚠️ Сообщение не из нужного канала или не channel_post")
 
 # === Основная функция запуска бота ===
 async def main():
