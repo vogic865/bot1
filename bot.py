@@ -11,7 +11,6 @@ BOT_TOKEN = '7714387405:AAEaeoA0nwiHkj7uRKXI1jzoHbDW0BAYEQM'
 SOURCE_CHANNEL_ID = -1002392464060  # ID исходного канала
 TARGET_CHAT_IDS = [
     -1002644440071,   # Канал 1
-    -1002392464060,   # Канал 2
     269504433         # Чат
 ]
 MY_USER_ID = 269504433  # Твой ID для проверки
